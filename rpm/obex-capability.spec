@@ -2,7 +2,6 @@ Name: obex-capability
 Version: 0.0.1
 Release: 1
 Summary: Simple tool for generating OBEX capability files
-Group: System/Libraries
 License: GPLv2
 Source: %{name}-%{version}.tar.gz
 BuildRequires: pkgconfig(Qt5Core)
@@ -15,6 +14,7 @@ BuildRequires: pkgconfig(Qt5SystemInfo)
 
 %files
 %defattr(-,root,root,-)
+%license COPYING
 %{_bindir}/obex-capability
 
 
