@@ -4,7 +4,8 @@ TARGET = obex-capability
 QT += xml
 QT -= gui
 CONFIG += link_pkgconfig
-PKGCONFIG += Qt5SystemInfo
+PKGCONFIG += ssu
+PKGCONFIG += systemsettings
 
 HEADERS = obex-capability.h
 

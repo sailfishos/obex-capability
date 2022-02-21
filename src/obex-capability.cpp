@@ -8,9 +8,8 @@
 #include <QCoreApplication>
 #include <QTimer>
 #include <QDebug>
-#include <QDeviceInfo>
-#include <QStorageInfo>
-#include <QNetworkInfo>
+#include <deviceinfo.h>
+#include <ssudeviceinfo.h>
 
 #include "obex-capability.h"
 
@@ -58,21 +57,19 @@ QDomElement ObexCapability::appendElementWithChildren(QDomElement &parent, const
 }
 
 void ObexCapability::getDeviceInfo(){
-    QDeviceInfo info;
+    DeviceInfo info;
+    SsuDeviceInfo ssu;
 
     QDomElement p = doc->createElement("General");
     root.appendChild(p);
 
     appendElement(p, "Manufacturer", info.manufacturer());
-    appendElement(p, "Model", info.model());
+    appendElement(p, "Model", info.prettyName());
 
     //appendElement(p, "Language", info.currentLanguage());
-    if (info.imeiCount() < 1)
-        appendElement(p, "SN", info.uniqueDeviceID());
-    else
-        appendElement(p, "SN", info.imei(0));
+    appendElement(p, "SN", ssu.deviceUid());
 
-    QString version = info.version(QDeviceInfo::Os);
+    QString version = info.osVersion();
     QStringList versionBits = version.split(".");
 
     // report the full version
@@ -81,35 +78,11 @@ void ObexCapability::getDeviceInfo(){
     sw.setAttribute("version", version);
 
     // report OS version with only major.minor
-    QStringList osBits = info.productName().split(" ");
+    QStringList osBits = info.designation().split(" ");
     QDomElement os = doc->createElement("OS");
     p.appendChild(os);
     os.setAttribute("id", osBits[0]);
     os.setAttribute("version", versionBits[0] + "." + versionBits[1]);
-
-    /*
-    QStorageInfo storageInfo;
-    foreach (const QString &s, storageInfo.allLogicalDrives()){
-        QStorageInfo::DriveType driveType = storageInfo.driveType(s);
-        if (driveType == QStorageInfo::InternalDrive){
-
-        }
-    }
-    */
-
-    QNetworkInfo networkInfo;
-    if (networkInfo.networkInterfaceCount(QNetworkInfo::GsmMode) >= 1){
-        // for now, only operate on the first interface
-        QHash<QString, QString> h;
-        h["XNam"] = "NetworkInfo";
-        h["XVal"] = "CurrentNetwork=" + networkInfo.networkName(QNetworkInfo::GsmMode, 0);
-        QDomElement e = appendElementWithChildren(p, "Ext", h);
-        appendElement(e, "XVal", "CountryCode=" + networkInfo.currentMobileCountryCode(0));
-        appendElement(e, "XVal", "NetworkID=" + networkInfo.currentMobileNetworkCode(0));
-    }
-
-    //QNetworkInterface iface = networkInfo.interfaceForMode(QNetworkInfo::GsmMode);
-
 
     // add: version
 

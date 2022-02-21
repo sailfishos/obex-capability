@@ -6,8 +6,8 @@ License: GPLv2
 Source: %{name}-%{version}.tar.gz
 BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5Xml)
-BuildRequires: pkgconfig(Qt5SystemInfo)
-
+BuildRequires: pkgconfig(ssu)
+BuildRequires: pkgconfig(systemsettings) >= 0.6.0
 
 %description
 %{summary}.
