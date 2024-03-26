@@ -9,7 +9,6 @@
 #include <QTimer>
 #include <QDebug>
 #include <deviceinfo.h>
-#include <ssudeviceinfo.h>
 
 #include "obex-capability.h"
 
@@ -62,8 +61,7 @@ QDomElement ObexCapability::appendElementWithChildren(QDomElement &parent, const
 
 void ObexCapability::getDeviceInfo()
 {
-    DeviceInfo info;
-    SsuDeviceInfo ssu;
+    DeviceInfo info(true);
 
     QDomElement p = doc->createElement("General");
     root.appendChild(p);
@@ -72,7 +70,7 @@ void ObexCapability::getDeviceInfo()
     appendElement(p, "Model", info.prettyName());
 
     //appendElement(p, "Language", info.currentLanguage());
-    appendElement(p, "SN", ssu.deviceUid());
+    appendElement(p, "SN", info.deviceUid());
 
     QString version = info.osVersion();
     QStringList versionBits = version.split(".");
