@@ -14,23 +14,23 @@
 class ObexCapability: public QObject {
     Q_OBJECT
 
-    public:
-        ObexCapability();
+public:
+    ObexCapability();
 
-    private:
-        QDomElement appendElement(QDomElement &parent, const QString &element, const QString &text);
-        QDomElement appendChildren(QDomElement &parent, const QHash<QString, QString> &children);
-        QDomElement appendElementWithChildren(QDomElement &parent, const QString &element,
-                                              const QHash<QString, QString> &children);
-        void getDeviceInfo();
-        void getSyncMLServices();
+private:
+    QDomElement appendElement(QDomElement &parent, const QString &element, const QString &text);
+    QDomElement appendChildren(QDomElement &parent, const QHash<QString, QString> &children);
+    QDomElement appendElementWithChildren(QDomElement &parent, const QString &element,
+                                          const QHash<QString, QString> &children);
+    void getDeviceInfo();
+    void getSyncMLServices();
 
-    public slots:
-        void run();
+public slots:
+    void run();
 
-    private:
-        QDomDocument *doc;
-        QDomElement root;
+private:
+    QDomDocument *doc;
+    QDomElement root;
 };
 
 #endif
