@@ -9,11 +9,11 @@
 #include <QTimer>
 #include <QDebug>
 #include <deviceinfo.h>
-#include <ssudeviceinfo.h>
 
 #include "obex-capability.h"
 
-ObexCapability::ObexCapability(){
+ObexCapability::ObexCapability()
+{
     doc = new QDomDocument("Capability SYSTEM \"obex-capability.dtd\"");
     QDomProcessingInstruction inst = doc->createProcessingInstruction("xml", "version=\"1.0\"");
     doc->appendChild(inst);
@@ -23,7 +23,8 @@ ObexCapability::ObexCapability(){
     doc->appendChild(root);
 }
 
-QDomElement ObexCapability::appendElement(QDomElement &parent, const QString &element, const QString &text){
+QDomElement ObexCapability::appendElement(QDomElement &parent, const QString &element, const QString &text)
+{
     QDomElement e = doc->createElement(element);
     parent.appendChild(e);
     QDomText t = doc->createTextNode(text);
@@ -32,9 +33,10 @@ QDomElement ObexCapability::appendElement(QDomElement &parent, const QString &el
     return e;
 }
 
-QDomElement ObexCapability::appendChildren(QDomElement &parent, const QHash<QString, QString> &children){
+QDomElement ObexCapability::appendChildren(QDomElement &parent, const QHash<QString, QString> &children)
+{
     QHashIterator<QString, QString> i(children);
-    while (i.hasNext()){
+    while (i.hasNext()) {
         i.next();
         QDomElement c = doc->createElement(i.key());
         parent.appendChild(c);
@@ -47,7 +49,8 @@ QDomElement ObexCapability::appendChildren(QDomElement &parent, const QHash<QStr
 }
 
 QDomElement ObexCapability::appendElementWithChildren(QDomElement &parent, const QString &element,
-                                                      const QHash<QString, QString> &children){
+                                                      const QHash<QString, QString> &children)
+{
     QDomElement e = doc->createElement(element);
     parent.appendChild(e);
 
@@ -56,9 +59,9 @@ QDomElement ObexCapability::appendElementWithChildren(QDomElement &parent, const
     return e;
 }
 
-void ObexCapability::getDeviceInfo(){
-    DeviceInfo info;
-    SsuDeviceInfo ssu;
+void ObexCapability::getDeviceInfo()
+{
+    DeviceInfo info(true);
 
     QDomElement p = doc->createElement("General");
     root.appendChild(p);
@@ -67,7 +70,7 @@ void ObexCapability::getDeviceInfo(){
     appendElement(p, "Model", info.prettyName());
 
     //appendElement(p, "Language", info.currentLanguage());
-    appendElement(p, "SN", ssu.deviceUid());
+    appendElement(p, "SN", info.deviceUid());
 
     QString version = info.osVersion();
     QStringList versionBits = version.split(".");
@@ -85,10 +88,10 @@ void ObexCapability::getDeviceInfo(){
     os.setAttribute("version", versionBits[0] + "." + versionBits[1]);
 
     // add: version
-
 }
 
-void ObexCapability::getSyncMLServices(){
+void ObexCapability::getSyncMLServices()
+{
     // TODO: read the supported syncml modules from device configuration
     QHash<QString, QString> h;
 
@@ -112,7 +115,8 @@ void ObexCapability::getSyncMLServices(){
     appendElementWithChildren(o, "Ext", h);
 }
 
-void ObexCapability::run(){
+void ObexCapability::run()
+{
     QTextStream qout(stdout);
     // first get general-section
     // in separate function, try to figure out which service sections we need
@@ -125,7 +129,8 @@ void ObexCapability::run(){
     QCoreApplication::quit();
 }
 
-int main (int argc, char **argv){
+int main (int argc, char **argv)
+{
     QCoreApplication app(argc, argv);
 
     ObexCapability mw;
